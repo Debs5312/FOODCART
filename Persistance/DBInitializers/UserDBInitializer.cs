@@ -3,7 +3,7 @@ using Model.DBModels;
 
 namespace Persistance
 {
-    public static class DBInitializer
+    public static class UserDBInitializer
     {
         public static async Task Initialize(UserDBContext context, UserManager<User> userManager)
         {
@@ -23,7 +23,7 @@ namespace Persistance
                     var admin = new User
                     {
                         UserName = "admin",
-                        Email = "admin@123.com"
+                        Email = "admin123@gmail.com"
                     };
 
                     await userManager.CreateAsync(admin, "Admin@123");
@@ -34,7 +34,7 @@ namespace Persistance
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error occured while saving to Database - ", ex.Message);
+                Console.WriteLine("Error occured while saving to Database - ", ex);
             }
             
         }

@@ -1,5 +1,8 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Model.DBModels;
 using Persistance;
 
@@ -14,7 +17,23 @@ builder.Services.AddIdentityCore<User>(opt =>
 {
   opt.Password.RequireNonAlphanumeric = false;
   opt.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<UserDBContext>();
+}).AddRoles<Role>().AddEntityFrameworkStores<UserDBContext>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+        {
+            opt.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                    .GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
+            };
+        });
+
+builder.Services.AddAuthorization();
 
 
 // Apply middleware in request pipeline
@@ -27,8 +46,11 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     //call your static method herer
 
-    await DBInitializer.Initialize(dbcontext, userManager);
+    await UserDBInitializer.Initialize(dbcontext, userManager);
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
