@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Model.DBModels;
 using Persistance;
+using UserManagementAPI.RequestHelpers;
+using UserManagementAPI.Services.Interfaces;
+using UserManagementAPI.Services.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,10 @@ builder.Services.AddIdentityCore<User>(opt =>
   opt.Password.RequireNonAlphanumeric = false;
   opt.User.RequireUniqueEmail = true;
 }).AddRoles<Role>().AddEntityFrameworkStores<UserDBContext>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddCors();
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
@@ -36,6 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 
+
 // Apply middleware in request pipeline
 var app = builder.Build();
 
@@ -48,6 +56,12 @@ using (var scope = app.Services.CreateScope())
 
     await UserDBInitializer.Initialize(dbcontext, userManager);
 }
+
+app.UseCors(opt =>
+    {
+        opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
+    }
+);
 
 app.UseAuthentication();
 app.UseAuthorization();
