@@ -47,6 +47,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Register Autorize services
 builder.Services.AddAuthorization();
 
+// Register Logging service
+builder.Logging.ClearProviders();
+builder.Logging.AddLog4Net();
+
 // Middleware design for http request pipeline
 var app = builder.Build();
 

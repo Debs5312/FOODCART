@@ -7,7 +7,8 @@ namespace FoodItemAPI.Services.Interfaces
     {
         Task<PageList<ProductReadDTO>> GetAllProducts(ProductParams productParams);
         Task<ProductReadDTO> GetProductByID(int Id);
-        Task<ProductReadDTO> UpsertProduct(ProductUpsertDTO productUpsertDTO, int id);
+        Task<ProductReadDTO> AddProduct(ProductUpsertDTO productUpsertDTO);
+        Task<ProductReadDTO> UpdateProduct(ProductUpsertDTO productUpsertDTO, int id);
         Task<bool> DeleteProduct(int Id);
     }
 }

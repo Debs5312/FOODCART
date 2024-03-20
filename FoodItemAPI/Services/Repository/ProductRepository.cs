@@ -68,19 +68,30 @@ namespace FoodItemAPI.Services.Repository
             }
         }
 
-        public async Task<ProductReadDTO> UpsertProduct(ProductUpsertDTO productUpsertDTO, int id)
+        public async Task<ProductReadDTO> AddProduct(ProductUpsertDTO productUpsertDTO)
         {
             Product product = _mapper.Map<Product>(productUpsertDTO);
-            if(id>0)
+            product.CreatedTime = DateTime.Now.ToString();
+            await _db.Products.AddAsync(product);
+                
+            int result = await _db.SaveChangesAsync();
+            
+            if(result>0)
             {
-                product.CreatedTime = DateTime.Now.ToString();
-                _db.Products.Update(product);
+                return _mapper.Map<ProductReadDTO>(product);
             }
             else
             {
-                product.CreatedTime = DateTime.Now.ToString();
-                await _db.Products.AddAsync(product);
+                return null;
             }
+        }
+
+        public async Task<ProductReadDTO> UpdateProduct(ProductUpsertDTO productUpsertDTO, int id)
+        {
+            Product item = await _db.Products.FindAsync(id);
+            item.CreatedTime = DateTime.Now.ToString();
+            Product product = _mapper.Map(productUpsertDTO, item);
+            _db.Products.Update(product);
             int result = await _db.SaveChangesAsync();
             if(result>0)
             {
