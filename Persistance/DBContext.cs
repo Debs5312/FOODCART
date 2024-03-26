@@ -5,7 +5,7 @@ namespace Persistance
 {
     public class DBContext : DbContext
     {
-        public DBContext(DbContextOptions options) : base(options)
+        public DBContext(DbContextOptions<DBContext> options) : base(options)
         {
             
         }

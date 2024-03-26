@@ -21,7 +21,6 @@ builder.Services.AddDbContext<DBContext>(opt =>
 
 // REgister Repository services 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 // Register AutoMapper service 
 builder.Services.AddAutoMapper(typeof(MappingConfig).Assembly);

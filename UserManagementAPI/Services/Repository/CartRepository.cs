@@ -1,9 +1,9 @@
-using FoodItemAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Model.DBModels;
 using Persistance;
+using UserManagementAPI.Services.Interfaces;
 
-namespace FoodItemAPI.Services.Repository
+namespace UserManagementAPI.Services.Repository
 {
     public class CartRepository : ICartRepository
     {

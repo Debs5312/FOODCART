@@ -1,6 +1,6 @@
 using Model.DBModels;
 
-namespace FoodItemAPI.Services.Interfaces
+namespace UserManagementAPI.Services.Interfaces
 {
     public interface ICartRepository
     {

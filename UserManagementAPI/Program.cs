@@ -14,7 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Register DB services
-builder.Services.AddDbContext<UserDBContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
+builder.Services.AddDbContext<UserDBContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("userdbconn")));
+builder.Services.AddDbContext<DBContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
 
 builder.Services.AddIdentityCore<User>(opt => 
 {
@@ -23,6 +24,7 @@ builder.Services.AddIdentityCore<User>(opt =>
 }).AddRoles<Role>().AddEntityFrameworkStores<UserDBContext>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddCors();
 builder.Services.AddScoped<TokenService>();
 
@@ -42,6 +44,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// Register Logging service
+builder.Logging.ClearProviders();
+builder.Logging.AddLog4Net();
 
 
 // Apply middleware in request pipeline

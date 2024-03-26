@@ -6,7 +6,7 @@ namespace Persistance
 {
     public class UserDBContext : IdentityDbContext<User, Role, int>
     {
-        public UserDBContext(DbContextOptions options) : base(options)
+        public UserDBContext(DbContextOptions<UserDBContext> options) : base(options)
         {
             
         }
